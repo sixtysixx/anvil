@@ -1,0 +1,108 @@
+
+---
+---
+
+<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/main.min.css' rel='stylesheet' />
+<link href='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/main.min.css' rel='stylesheet' />
+
+<!-- HTML Structure -->
+<!-- This wrapper div will contain our entire calendar -->
+<div class="calendar-wrapper">
+  <!-- This is where FullCalendar will be initialized -->
+  <div id="calendar"></div>
+</div>
+
+
+
+<script>
+
+  import { Calendar } from '@fullcalendar/core';
+  import dayGridPlugin from '@fullcalendar/daygrid';
+  import interactionPlugin from '@fullcalendar/interaction';
+//  import { PortableText } from "astro-portabletext";
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get the calendar container element
+    const calendarEl = document.getElementById('calendar');
+
+    // Initialize calendar with configuration options
+    const calendar = new Calendar(calendarEl, {
+      plugins: [dayGridPlugin, interactionPlugin],
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,dayGridWeek'
+      },
+      editable: true,
+      selectable: true,
+      select: function(info) {
+        const title = prompt('Enter event title:');
+        if (title) {
+          calendar.addEvent({
+            title: title,
+            start: info.startStr,
+            end: info.endStr,
+            allDay: info.allDay
+          });
+        }
+      },
+      eventClick: function(info) {
+        if (confirm ('Delete event?')) {
+          info.event.remove();
+        }
+      }
+    });
+
+    // Render the calendar
+    calendar.render();
+  });
+
+const portableText = [
+{
+  _type: "block",
+  children: [
+    {
+      _type: "span",
+      marks: [],
+      text: "This is a ",
+    },
+    {
+      _type: "span",
+      marks: ["strong"],
+      text: "bold",
+    },
+    {
+      _type: "span",
+      marks: [],
+      text: " text example!",
+    },
+  ],
+  markDefs: [],
+  style: "normal",
+},
+];
+</script>
+
+<!-- Styling -->
+<style>
+  .calendar-wrapper {
+    /* Base styling for the calendar container */
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+
+    /* Example of a clean, modern look: */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  #calendar {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+  }
+</style>
+

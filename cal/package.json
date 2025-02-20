@@ -1,0 +1,17 @@
+{
+  "name": "cal",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.2.5",
+    "fullcalendar/core": "^6.1.10",
+    "fullcalendar/daygrid": "^6.1.10",
+    "fullcalendar/interaction": "^6.1.10"
+  }
+}
