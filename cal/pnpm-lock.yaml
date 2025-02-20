@@ -8,6 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@fullcalendar/core':
+        specifier: ^6.1.10
+        version: 6.1.15
+      '@fullcalendar/daygrid':
+        specifier: ^6.1.10
+        version: 6.1.15(@fullcalendar/core@6.1.15)
+      '@fullcalendar/interaction':
+        specifier: ^6.1.10
+        version: 6.1.15(@fullcalendar/core@6.1.15)
       astro:
         specifier: ^5.2.5
         version: 5.2.5(rollup@4.34.6)(typescript@5.7.3)
@@ -200,6 +209,19 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fullcalendar/core@6.1.15':
+    resolution: {integrity: sha512-BuX7o6ALpLb84cMw1FCB9/cSgF4JbVO894cjJZ6kP74jzbUZNjtwffwRdA+Id8rrLjT30d/7TrkW90k4zbXB5Q==}
+
+  '@fullcalendar/daygrid@6.1.15':
+    resolution: {integrity: sha512-j8tL0HhfiVsdtOCLfzK2J0RtSkiad3BYYemwQKq512cx6btz6ZZ2RNc/hVnIxluuWFyvx5sXZwoeTJsFSFTEFA==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.15
+
+  '@fullcalendar/interaction@6.1.15':
+    resolution: {integrity: sha512-DOTSkofizM7QItjgu7W68TvKKvN9PSEEvDJceyMbQDvlXHa7pm/WAVtAc6xSDZ9xmB1QramYoWGLHkCYbTW1rQ==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.15
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -1099,6 +1121,9 @@ packages:
     resolution: {integrity: sha512-6oz2beyjc5VMn/KV1pPw8fliQkhBXrVn1Z3TVyqZxU8kZpzEKhBdmCFqI6ZbmGtamQvQGuU1sgPTk8ZrXDD7jQ==}
     engines: {node: ^10 || ^12 || >=14}
 
+  preact@10.12.1:
+    resolution: {integrity: sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==}
+
   preferred-pm@4.1.1:
     resolution: {integrity: sha512-rU+ZAv1Ur9jAUZtGPebQVQPzdGhNzaEiQ7VL9+cjsAWPHFYOccNXPNiev1CCDSOg/2j7UujM7ojNhpkuILEVNQ==}
     engines: {node: '>=18.12'}
@@ -1624,6 +1649,18 @@ snapshots:
 
   '@esbuild/win32-x64@0.24.2':
     optional: true
+
+  '@fullcalendar/core@6.1.15':
+    dependencies:
+      preact: 10.12.1
+
+  '@fullcalendar/daygrid@6.1.15(@fullcalendar/core@6.1.15)':
+    dependencies:
+      '@fullcalendar/core': 6.1.15
+
+  '@fullcalendar/interaction@6.1.15(@fullcalendar/core@6.1.15)':
+    dependencies:
+      '@fullcalendar/core': 6.1.15
 
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
@@ -2763,6 +2800,8 @@ snapshots:
       nanoid: 3.3.8
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  preact@10.12.1: {}
 
   preferred-pm@4.1.1:
     dependencies:
