@@ -1,0 +1,301 @@
+---
+// No frontmatter needed for this component
+---
+
+<div class="clock-container">
+  <!-- Clock Section -->
+  <div class="clock-section">
+    <h2>Digital Clock</h2>
+    <div id="clock" class="time-display">00:00:00</div>
+    <div id="date" class="date-display"></div>
+  </div>
+
+  <!-- Stopwatch Section -->
+  <div class="clock-section">
+    <h2>Stopwatch</h2>
+    <div id="stopwatch" class="time-display">00:00:00</div>
+    <div class="controls">
+      <button id="startStop">Start</button>
+      <button id="reset">Reset</button>
+      <button id="lap">Lap</button>
+    </div>
+    <div id="lapTimes" class="lap-times"></div>
+  </div>
+
+  <!-- Timer Section -->
+  <div class="clock-section">
+    <h2>Timer</h2>
+    <div class="timer-input">
+      <input type="number" id="hours" placeholder="HH" min="0" max="23">
+      <input type="number" id="minutes" placeholder="MM" min="0" max="59">
+      <input type="number" id="seconds" placeholder="SS" min="0" max="59">
+    </div>
+    <div id="timer" class="time-display">00:00:00</div>
+    <div class="controls">
+      <button id="startTimer">Start Timer</button>
+      <button id="resetTimer">Reset</button>
+    </div>
+  </div>
+
+  <!-- Alarm Section -->
+  <div class="clock-section">
+    <h2>Alarm</h2>
+    <div class="alarm-input">
+      <input type="time" id="alarmTime">
+      <button id="setAlarm">Set Alarm</button>
+    </div>
+    <div id="activeAlarms" class="active-alarms"></div>
+  </div>
+</div>
+
+<script>
+  // Clock functionality
+  function updateClock() {
+    const now = new Date();
+    const clockDisplay = document.getElementById('clock');
+    const dateDisplay = document.getElementById('date');
+
+    clockDisplay.textContent = now.toLocaleTimeString();
+    dateDisplay.textContent = now.toLocaleDateString();
+  }
+
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  let hoursEl = document.getElementById('hours') as HTMLInputElement
+  let minutesEl = document.getElementById('minutes') as HTMLInputElement
+  let secondsEl = document.getElementById('seconds') as HTMLInputElement
+
+  // Stopwatch functionality
+  let stopwatchTime = 0;
+  let stopwatchInterval;
+  let isRunning = false;
+  const laps = [];
+
+  document.getElementById('startStop').addEventListener('click', () => {
+    if (!isRunning) {
+      stopwatchInterval = setInterval(() => {
+        stopwatchTime++;
+        updateStopwatchDisplay();
+      }, 1000);
+      document.getElementById('startStop').textContent = 'Stop';
+    } else {
+      clearInterval(stopwatchInterval);
+      document.getElementById('startStop').textContent = 'Start';
+    }
+    isRunning = !isRunning;
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    clearInterval(stopwatchInterval);
+    stopwatchTime = 0;
+    laps.length = 0;
+    updateStopwatchDisplay();
+    document.getElementById('lapTimes').innerHTML = '';
+    document.getElementById('startStop').textContent = 'Start';
+    isRunning = false;
+  });
+
+  document.getElementById('lap').addEventListener('click', () => {
+    if (isRunning) {
+      laps.push(stopwatchTime);
+      const lapItem = document.createElement('div');
+      lapItem.textContent = `Lap ${laps.length}: ${formatTime(stopwatchTime)}`;
+      document.getElementById('lapTimes').prepend(lapItem);
+    }
+  });
+
+  function updateStopwatchDisplay() {
+    document.getElementById('stopwatch').textContent = formatTime(stopwatchTime);
+  }
+
+  // Timer functionality
+  let timerInterval;
+  let timerTime = 0;
+
+  document.getElementById('startTimer').addEventListener('click', () => {
+    
+    let hours = 0
+    if (hoursEl.value != null)
+      hours = parseFloat(hoursEl.value)
+
+    
+    let minutes = 0
+    if (minutesEl.value != null)
+      minutes = parseFloat(minutesEl.value)
+
+    
+    let seconds = 0
+    if (secondsEl.value != null)
+      seconds = parseFloat(secondsEl.value)
+
+    timerTime = hours * 3600 + minutes * 60 + seconds;
+
+    if (timerTime > 0) {
+      timerInterval = setInterval(() => {
+        if (timerTime > 0) {
+          timerTime--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          alert('Timer finished!');
+        }
+      }, 1000);
+    }
+  });
+
+  document.getElementById('resetTimer').addEventListener('click', () => {
+    clearInterval(timerInterval);
+    timerTime = 0;
+    updateTimerDisplay();
+    hoursEl.value = '';
+    minutesEl.value = '';
+    secondsEl.value = '';
+  });
+
+  function updateTimerDisplay() {
+    document.getElementById('timer').textContent = formatTime(timerTime);
+  }
+
+  // Alarm functionality
+  const alarms = new Set();
+
+  document.getElementById('setAlarm').addEventListener('click', () => {
+    let alarmEl = document.getElementById('alarmTime') as HTMLInputElement
+    const alarmTime = alarmEl.value;
+    if (alarmTime) {
+      alarms.add(alarmTime);
+      updateAlarmDisplay();
+    }
+  });
+
+  function checkAlarms() {
+    const now = new Date();
+    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    alarms.forEach(alarm => {
+      if (alarm === currentTime) {
+        alert('Alarm!');
+        alarms.delete(alarm);
+        updateAlarmDisplay();
+      }
+    });
+  }
+
+  setInterval(checkAlarms, 1000);
+
+  function updateAlarmDisplay() {
+    const alarmsContainer = document.getElementById('activeAlarms');
+    alarmsContainer.innerHTML = '';
+    alarms.forEach(alarm => {
+      const alarmElement = document.createElement('div');
+      alarmElement.className = 'alarm-item';
+      alarmElement.textContent = alarm;
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.onclick = () => {
+        alarms.delete(alarm);
+        updateAlarmDisplay();
+      };
+      alarmElement.appendChild(deleteButton);
+      alarmsContainer.appendChild(alarmElement);
+    });
+  }
+
+  // Utility function for formatting time
+  function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+</script>
+
+<style>
+  .clock-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .clock-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .time-display {
+    font-size: 2em;
+    font-family: monospace;
+    margin: 10px 0;
+    color: #333;
+  }
+
+  .date-display {
+    font-size: 1.2em;
+    color: #666;
+  }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  button:hover {
+    background: #2980b9;
+  }
+
+  input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 5px;
+    width: 60px;
+  }
+
+  .lap-times {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-top: 10px;
+  }
+
+  .lap-times div {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .alarm-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    margin: 5px 0;
+    background: #f8f9fa;
+    border-radius: 4px;
+  }
+
+  .alarm-item button {
+    background: #e74c3c;
+    padding: 4px 8px;
+    font-size: 0.8em;
+  }
+
+  .alarm-item button:hover {
+    background: #c0392b;
+  }
+</style>
