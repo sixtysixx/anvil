@@ -3,7 +3,28 @@ import Calendar from '../pages/components/Calendar.astro';
 import Clock from '../pages/components/Clock.astro';
 ---
 
-<main>
-  <h1>Calendar + Clock</h1>
-  <Clock />
+<>
+  <title>Calender & Clock</title>
+  <div class="Calender">
+    <Calendar />
+  </div>
+  <div class="Clock">
+    <Clock />
+  </div>
 </main>
+
+
+<style>
+  .Calender{
+    position: relative;
+    /*left: 20%;*/
+    width: 85%;
+  }
+
+  .Clock{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 20%;
+  }
+</style>
