@@ -1,6 +1,7 @@
 ---
 import Calendar from '../pages/components/Calendar.astro';
 import Clock from '../pages/components/Clock.astro';
+import Notes from '../pages/components/Notes.astro';
 ---
 
 <>
@@ -10,6 +11,9 @@ import Clock from '../pages/components/Clock.astro';
   </div>
   <div class="Clock">
     <Clock />
+  </div>
+  <div class="Notes">
+    <Notes />
   </div>
 </main>
 
@@ -27,4 +31,13 @@ import Clock from '../pages/components/Clock.astro';
     left: 0%;
     width: 20%;
   }
+  .Notes{
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    width: 20%;
+    padding-right: 12%;
+  }
+
+
 </style>
