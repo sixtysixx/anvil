@@ -1,0 +1,27 @@
+---
+import { supabase } from '../lib/supabase';
+---
+
+<div id="test-result">Testing database connection...</div>
+
+<script>
+  import { supabase } from '../lib/supabase';
+
+  async function testConnection() {
+    try {
+      const { data, error } = await supabase
+        .from('events')
+        .select('count');
+
+      if (error) throw error;
+
+      document.getElementById('test-result').textContent = 
+        'Successfully connected to database!';
+    } catch (error) {
+      document.getElementById('test-result').textContent = 
+        'Error connecting to database: ' + error.message;
+    }
+  }
+
+  testConnection();
+</script>

@@ -19,11 +19,70 @@
 </div>
 
 <script>
+  import { supabase } from '../lib/supabase';
   import { Calendar } from "@fullcalendar/core";
   import dayGridPlugin from "@fullcalendar/daygrid";
   import interactionPlugin from "@fullcalendar/interaction";
 
-  document.addEventListener("DOMContentLoaded", function () {
+  // Add these new functions
+  async function loadEvents() {
+    try {
+      const { data, error } = await supabase
+        .from('events')
+        .select('*');
+
+      if (error) throw error;
+
+      return data.map(event => ({
+        id: event.id,
+        title: event.title,
+        start: event.start_date,
+        end: event.end_date,
+        description: event.description,
+        backgroundColor: event.color,
+        category: event.category
+      }));
+      } finally {
+    toggleLoading(false);
+  }
+  }
+
+  async function saveEvent(eventData) {
+    try {
+      const { data, error } = await supabase
+        .from('events')
+        .insert([{
+          title: eventData.title,
+          description: eventData.description || '',
+          start_date: eventData.start,
+          end_date: eventData.end,
+          category: eventData.category || 'default',
+          color: eventData.backgroundColor
+        }]);
+
+      if (error) throw error;
+      return data[0];
+    } catch (error) {
+      console.error('Error saving event:', error);
+      alert('Failed to save event');
+    }
+  }
+
+  async function deleteEvent(eventId) {
+    try {
+      const { error } = await supabase
+        .from('events')
+        .delete()
+        .eq('id', eventId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      alert('Failed to delete event');
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", async function () {
     const calendarEl = document.getElementById("calendar");
 
     // Load saved events from localStorage
@@ -31,7 +90,7 @@
       localStorage.getItem("calendarEvents") || "[]",
     );
 
-    const calendar = new Calendar(calendarEl, {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
       plugins: [dayGridPlugin, interactionPlugin],
       initialView: "dayGridMonth",
       headerToolbar: {
@@ -42,7 +101,21 @@
       editable: true,
       selectable: true,
       events: savedEvents,
-      select: function (info) {
+      select: async function(info) {
+          const title = prompt('Enter event title:');
+          if (title) {
+            const eventData = {
+              title,
+              start: info.startStr,
+              end: info.endStr,
+              backgroundColor: '#3788d8'
+            };
+
+            await saveEvent(eventData);
+            calendar.refetchEvents();
+          }
+        },
+      events: events, {
         const title = prompt("Enter event title:");
         if (title) {
           const newEvent = {
@@ -54,7 +127,8 @@
           calendar.addEvent(newEvent);
 
           // Save to localStorage
-          const events = calendar.getEvents().map((e) => ({
+          const events = await loadEvents();
+
             title: e.title,
             start: e.startStr,
             end: e.endStr,
@@ -63,24 +137,36 @@
           localStorage.setItem("calendarEvents", JSON.stringify(events));
         }
       },
-      eventClick: function (info) {
-        if (confirm("Delete event?")) {
+      eventClick: async function(info) {
+        if (confirm('Delete this event?')) {
+          await deleteEvent(info.event.id);
           info.event.remove();
+        }
+      },
+      eventChange: async function(info) {
+        try {
+          const { error } = await supabase
+            .from('events')
+            .update({
+              start_date: info.event.startStr,
+              end_date: info.event.endStr
+            })
+            .eq('id', info.event.id);
 
-          // Update localStorage after deletion
-          const events = calendar.getEvents().map((e) => ({
-            title: e.title,
-            start: e.startStr,
-            end: e.endStr,
-            allDay: e.allDay,
-          }));
-          localStorage.setItem("calendarEvents", JSON.stringify(events));
+          if (error) throw error;
+        } catch (error) {
+          console.error('Error updating event:', error);
+          info.revert();
+          alert('Failed to update event');
         }
       },
     });
 
     calendar.render();
   });
+  function toggleLoading(show) {
+    document.getElementById('loadingIndicator').classList.toggle('hidden', !show);
+}
 </script>
 
 <!-- Styling -->
@@ -124,5 +210,21 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
   }
+
+  .loading-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
 
 </style>
