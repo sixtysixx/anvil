@@ -1,43 +1,49 @@
 ---
-import Calendar from '../pages/components/Calendar.astro';
-import Clock from '../pages/components/Clock.astro';
-import Notes from '../pages/components/Notes.astro';
+import Calendar from "../pages/components/Calendar.astro";
+import Clock from "../pages/components/Clock.astro";
+import Notes from "../pages/components/Notes.astro";
 ---
 
 <>
   <title>Calender & Clock</title>
-  <div class="Calender">
-    <Calendar />
+  <div class="Bundle">
+    <div class="Bundle-grid">
+        <div class="Clock">
+          <Clock />
+        </div>
+        <div class="Calender">
+          <Calendar />
+        </div>
+        <div class="Notes">
+          <Notes />
+        </div>
+    </div>
   </div>
-  <div class="Clock">
-    <Clock />
-  </div>
-  <div class="Notes">
-    <Notes />
-  </div>
-</main>
-
+</>
 
 <style>
-  .Calender{
-    position: relative;
+  .Calender {
+    grid-template-columns: repeat(3, 1fr);
     /*left: 20%;*/
     width: 85%;
   }
 
-  .Clock{
-    position: absolute;
-    top: 0%;
-    left: 0%;
-    width: 20%;
+  .Clock {
+    grid-template-columns: repeat(3, 1fr);
+
   }
-  .Notes{
-    position: absolute;
-    top: 0%;
-    right: 0%;
-    width: 20%;
+  .Notes {
+    grid-template-columns: repeat(3, 1fr);
+
     padding-right: 12%;
   }
+  .Bundle-grid {
+    grid-template-columns: repeat(3, 1fr);
+    display: grid;
+    
+  }
 
-
+  .Bundle {
+    grid-column: 1 / -1;
+  }
 </style>
