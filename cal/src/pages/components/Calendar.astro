@@ -63,10 +63,11 @@
           category: eventData.category || 'default',
           color: eventData.backgroundColor
         }]);
-
+      
       if (error) throw error;
-      return data[0];
+      return eventData[0];
     } catch (error) {
+      
      // error.message
       console.error('Error saving event:', error);
       alert('Failed to save event');
