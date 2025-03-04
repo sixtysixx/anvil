@@ -11,21 +11,25 @@
   rel="stylesheet"
 />
 
-<!-- HTML Structure -->
-<!-- This wrapper div will contain our entire calendar -->
-<div class="calendar-wrapper">
-  <!-- This is where FullCalendar will be initialized -->
-  <div id="calendar"></div>
+<div class="calendar-container">
+  <!-- Calendar section -->
+  <div class="calendar-wrapper">
+    <div id="loadingIndicator" class="loading-indicator hidden">
+      Loading...
+    </div>
+    <div id="calendar"></div>
+  </div>
 </div>
 
 <script>
-  import { supabase } from '../lib/supabase';
+  import { supabase } from '../../lib/supabase';
   import { Calendar } from "@fullcalendar/core";
   import dayGridPlugin from "@fullcalendar/daygrid";
   import interactionPlugin from "@fullcalendar/interaction";
 
   // Add these new functions
   async function loadEvents() {
+    toggleLoading(true);
     try {
       const { data, error } = await supabase
         .from('events')
@@ -63,6 +67,7 @@
       if (error) throw error;
       return data[0];
     } catch (error) {
+     // error.message
       console.error('Error saving event:', error);
       alert('Failed to save event');
     }
@@ -83,14 +88,15 @@
   }
 
   document.addEventListener("DOMContentLoaded", async function () {
-    const calendarEl = document.getElementById("calendar");
-
+    const calendarEl = document.getElementById('calendar') as HTMLElement;
+ 
+    const events = await loadEvents();
     // Load saved events from localStorage
     const savedEvents = JSON.parse(
       localStorage.getItem("calendarEvents") || "[]",
     );
 
-    const calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, interactionPlugin],
       initialView: "dayGridMonth",
       headerToolbar: {
@@ -100,7 +106,7 @@
       },
       editable: true,
       selectable: true,
-      events: savedEvents,
+      events: events,
       select: async function(info) {
           const title = prompt('Enter event title:');
           if (title) {
@@ -115,34 +121,12 @@
             calendar.refetchEvents();
           }
         },
-      events: events, {
-        const title = prompt("Enter event title:");
-        if (title) {
-          const newEvent = {
-            title: title,
-            start: info.startStr,
-            end: info.endStr,
-            allDay: info.allDay,
-          };
-          calendar.addEvent(newEvent);
-
-          // Save to localStorage
-          const events = await loadEvents();
-
-            title: e.title,
-            start: e.startStr,
-            end: e.endStr,
-            allDay: e.allDay,
-          }));
-          localStorage.setItem("calendarEvents", JSON.stringify(events));
-        }
-      },
-      eventClick: async function(info) {
-        if (confirm('Delete this event?')) {
-          await deleteEvent(info.event.id);
-          info.event.remove();
-        }
-      },
+        eventClick: async function(info) {
+          if (confirm('Delete this event?')) {
+            await deleteEvent(info.event.id);
+            info.event.remove();
+          }
+        },
       eventChange: async function(info) {
         try {
           const { error } = await supabase
@@ -165,36 +149,19 @@
     calendar.render();
   });
   function toggleLoading(show) {
-    document.getElementById('loadingIndicator').classList.toggle('hidden', !show);
+    let loadingEl = document.getElementById('loadingIndicator') as HTMLElement
+    loadingEl.classList.toggle('hidden', !show);
 }
 </script>
 
-<!-- Styling -->
+
+
 <style>
-  .calendar-wrapper {
-    width: 100%;
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
   #calendar {
     width: 100%;
     height: 100%;
     min-height: 500px;
   }
-</style>
-
-<div class="calendar-container">
-  <!-- Calendar section -->
-  <div class="calendar-wrapper">
-    <div id="calendar"></div>
-  </div>
-</div>
-
-<style>
   .calendar-container {
     display: flex;
     gap: 20px;
@@ -204,11 +171,13 @@
   }
 
   .calendar-wrapper {
-    flex: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
   }
 
   .loading-indicator {
