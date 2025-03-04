@@ -112,7 +112,9 @@
           };
 
           await saveEvent(eventData);
-          calendar.refetchEvents();
+          const newEvents = await loadEvents();
+          calendar.removeAllEvents();
+          calendar.addEventSource(newEvents);
         }
       },
       eventClick: async function (info) {
