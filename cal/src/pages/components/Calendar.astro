@@ -14,15 +14,13 @@
 <div class="calendar-container">
   <!-- Calendar section -->
   <div class="calendar-wrapper">
-    <div id="loadingIndicator" class="loading-indicator hidden">
-      Loading...
-    </div>
+    <div id="loadingIndicator" class="loading-indicator hidden">Loading...</div>
     <div id="calendar"></div>
   </div>
 </div>
 
 <script>
-  import { supabase } from '../../lib/supabase';
+  import { supabase } from "../../lib/supabase";
   import { Calendar } from "@fullcalendar/core";
   import dayGridPlugin from "@fullcalendar/daygrid";
   import interactionPlugin from "@fullcalendar/interaction";
@@ -31,68 +29,63 @@
   async function loadEvents() {
     toggleLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('events')
-        .select('*');
+      const { data, error } = await supabase.from("events").select("*");
 
       if (error) throw error;
 
-      return data.map(event => ({
+      return data.map((event) => ({
         id: event.id,
         title: event.title,
         start: event.start_date,
         end: event.end_date,
         description: event.description,
         backgroundColor: event.color,
-        category: event.category
+        category: event.category,
       }));
-      } finally {
-    toggleLoading(false);
-  }
+    } finally {
+      toggleLoading(false);
+    }
   }
 
   async function saveEvent(eventData) {
     try {
-      const { data, error } = await supabase
-        .from('events')
-        .insert([{
+      const { data, error } = await supabase.from("events").insert([
+        {
           title: eventData.title,
-          description: eventData.description || '',
+          description: eventData.description || "",
           start_date: eventData.start,
           end_date: eventData.end,
-          category: eventData.category || 'default',
-          color: eventData.backgroundColor
-        }]);
-      
+          category: eventData.category || "default",
+          color: eventData.backgroundColor,
+        },
+      ]);
+
       if (error) throw error;
       return eventData[0];
     } catch (error) {
-      
-     // error.message
-      console.error('Error saving event:', error);
-      alert('Failed to save event');
+      // error.message
+      console.error("Error saving event:", error);
+      alert("Failed to save event");
     }
   }
 
   async function deleteEvent(eventId) {
     try {
       const { error } = await supabase
-        .from('events')
+        .from("events")
         .delete()
-        .eq('id', eventId);
+        .eq("id", eventId);
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error deleting event:', error);
-      alert('Failed to delete event');
+      console.error("Error deleting event:", error);
+      alert("Failed to delete event");
     }
   }
-
   document.addEventListener("DOMContentLoaded", async function () {
-    const calendarEl = document.getElementById('calendar') as HTMLElement;
- 
+    const calendarEl = document.getElementById("calendar") as HTMLElement;
+
     const events = await loadEvents();
-    // Load saved events from localStorage
     const savedEvents = JSON.parse(
       localStorage.getItem("calendarEvents") || "[]",
     );
@@ -108,41 +101,41 @@
       editable: true,
       selectable: true,
       events: events,
-      select: async function(info) {
-          const title = prompt('Enter event title:');
-          if (title) {
-            const eventData = {
-              title,
-              start: info.startStr,
-              end: info.endStr,
-              backgroundColor: '#3788d8'
-            };
+      select: async function (info) {
+        const title = prompt("Enter event title:");
+        if (title) {
+          const eventData = {
+            title,
+            start: info.startStr,
+            end: info.endStr,
+            backgroundColor: "#3788d8",
+          };
 
-            await saveEvent(eventData);
-            calendar.refetchEvents();
-          }
-        },
-        eventClick: async function(info) {
-          if (confirm('Delete this event?')) {
-            await deleteEvent(info.event.id);
-            info.event.remove();
-          }
-        },
-      eventChange: async function(info) {
+          await saveEvent(eventData);
+          calendar.refetchEvents();
+        }
+      },
+      eventClick: async function (info) {
+        if (confirm("Delete this event?")) {
+          await deleteEvent(info.event.id);
+          info.event.remove();
+        }
+      },
+      eventChange: async function (info) {
         try {
           const { error } = await supabase
-            .from('events')
+            .from("events")
             .update({
               start_date: info.event.startStr,
-              end_date: info.event.endStr
+              end_date: info.event.endStr,
             })
-            .eq('id', info.event.id);
+            .eq("id", info.event.id);
 
           if (error) throw error;
         } catch (error) {
-          console.error('Error updating event:', error);
+          console.error("Error updating event:", error);
           info.revert();
-          alert('Failed to update event');
+          alert("Failed to update event");
         }
       },
     });
@@ -150,12 +143,10 @@
     calendar.render();
   });
   function toggleLoading(show) {
-    let loadingEl = document.getElementById('loadingIndicator') as HTMLElement
-    loadingEl.classList.toggle('hidden', !show);
-}
+    let loadingEl = document.getElementById("loadingIndicator") as HTMLElement;
+    loadingEl.classList.toggle("hidden", !show);
+  }
 </script>
-
-
 
 <style>
   #calendar {
@@ -182,19 +173,18 @@
   }
 
   .loading-indicator {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 20px;
-  border-radius: 8px;
-  z-index: 1000;
-}
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 1000;
+  }
 
-.hidden {
-  display: none;
-}
-
+  .hidden {
+    display: none;
+  }
 </style>

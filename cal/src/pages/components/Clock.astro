@@ -26,9 +26,9 @@
   <div class="clock-section">
     <h2>Timer</h2>
     <div class="timer-input">
-      <input type="number" id="hours" placeholder="HH" min="0" max="23">
-      <input type="number" id="minutes" placeholder="MM" min="0" max="59">
-      <input type="number" id="seconds" placeholder="SS" min="0" max="59">
+      <input type="number" id="hours" placeholder="HH" min="0" max="23" />
+      <input type="number" id="minutes" placeholder="MM" min="0" max="59" />
+      <input type="number" id="seconds" placeholder="SS" min="0" max="59" />
     </div>
     <div id="timer" class="time-display">00:00:00</div>
     <div class="controls">
@@ -41,7 +41,7 @@
   <div class="clock-section">
     <h2>Alarm</h2>
     <div class="alarm-input">
-      <input type="time" id="alarmTime">
+      <input type="time" id="alarmTime" />
       <button id="setAlarm">Set Alarm</button>
     </div>
     <div id="activeAlarms" class="active-alarms"></div>
@@ -52,8 +52,8 @@
   // Clock functionality
   function updateClock() {
     const now = new Date();
-    const clockDisplay = document.getElementById('clock');
-    const dateDisplay = document.getElementById('date');
+    const clockDisplay = document.getElementById("clock");
+    const dateDisplay = document.getElementById("date");
 
     clockDisplay.textContent = now.toLocaleTimeString();
     dateDisplay.textContent = now.toLocaleDateString();
@@ -62,10 +62,10 @@
   setInterval(updateClock, 1000);
   updateClock();
 
-  let hoursEl = document.getElementById('hours') as HTMLInputElement
-  let minutesEl = document.getElementById('minutes') as HTMLInputElement
-  let secondsEl = document.getElementById('seconds') as HTMLInputElement
-  let MSEl = document.getElementById('MS') as HTMLInputElement
+  let hoursEl = document.getElementById("hours") as HTMLInputElement;
+  let minutesEl = document.getElementById("minutes") as HTMLInputElement;
+  let secondsEl = document.getElementById("seconds") as HTMLInputElement;
+  let MSEl = document.getElementById("MS") as HTMLInputElement;
 
   // Stopwatch functionality
   let stopwatchTime = 0;
@@ -73,62 +73,57 @@
   let isRunning = false;
   const laps = [];
 
-  document.getElementById('startStop').addEventListener('click', () => {
+  document.getElementById("startStop").addEventListener("click", () => {
     if (!isRunning) {
       stopwatchInterval = setInterval(() => {
         stopwatchTime++;
         updateStopwatchDisplay();
       }, 10);
-      document.getElementById('startStop').textContent = 'Stop';
+      document.getElementById("startStop").textContent = "Stop";
     } else {
       clearInterval(stopwatchInterval);
-      document.getElementById('startStop').textContent = 'Start';
+      document.getElementById("startStop").textContent = "Start";
     }
     isRunning = !isRunning;
   });
 
-  document.getElementById('reset').addEventListener('click', () => {
+  document.getElementById("reset").addEventListener("click", () => {
     clearInterval(stopwatchInterval);
     stopwatchTime = 0;
     laps.length = 0;
     updateStopwatchDisplay();
-    document.getElementById('lapTimes').innerHTML = '';
-    document.getElementById('startStop').textContent = 'Start';
+    document.getElementById("lapTimes").innerHTML = "";
+    document.getElementById("startStop").textContent = "Start";
     isRunning = false;
   });
 
-  document.getElementById('lap').addEventListener('click', () => {
+  document.getElementById("lap").addEventListener("click", () => {
     if (isRunning) {
       laps.push(stopwatchTime);
-      const lapItem = document.createElement('div');
+      const lapItem = document.createElement("div");
       lapItem.textContent = `Lap ${laps.length}: ${formatTime(stopwatchTime)}`;
-      document.getElementById('lapTimes').prepend(lapItem);
+      document.getElementById("lapTimes").prepend(lapItem);
     }
   });
 
   function updateStopwatchDisplay() {
-    document.getElementById('stopwatch').textContent = formatTime(stopwatchTime);
+    document.getElementById("stopwatch").textContent =
+      formatTime(stopwatchTime);
   }
 
   // Timer functionality
   let timerInterval;
   let timerTime = 0;
 
-  document.getElementById('startTimer').addEventListener('click', () => {
-    
-    let hours = 0
-    if (hoursEl.value != null)
-      hours = parseFloat(hoursEl.value)
+  document.getElementById("startTimer").addEventListener("click", () => {
+    let hours = 0;
+    if (hoursEl.value != null) hours = parseFloat(hoursEl.value);
 
-    
-    let minutes = 0
-    if (minutesEl.value != null)
-      minutes = parseFloat(minutesEl.value)
+    let minutes = 0;
+    if (minutesEl.value != null) minutes = parseFloat(minutesEl.value);
 
-    
-    let seconds = 0
-    if (secondsEl.value != null)
-      seconds = parseFloat(secondsEl.value)
+    let seconds = 0;
+    if (secondsEl.value != null) seconds = parseFloat(secondsEl.value);
 
     timerTime = hours * 3600 + minutes * 60 + seconds;
 
@@ -139,31 +134,31 @@
           updateTimerDisplay();
         } else {
           clearInterval(timerInterval);
-          alert('Timer finished!');
+          alert("Timer finished!");
         }
       }, 1000);
     }
   });
 
-  document.getElementById('resetTimer').addEventListener('click', () => {
+  document.getElementById("resetTimer").addEventListener("click", () => {
     clearInterval(timerInterval);
     timerTime = 0;
     updateTimerDisplay();
-    hoursEl.value = '';
-    minutesEl.value = '';
-    secondsEl.value = '';
-    MSEl.value = '';
+    hoursEl.value = "";
+    minutesEl.value = "";
+    secondsEl.value = "";
+    MSEl.value = "";
   });
 
   function updateTimerDisplay() {
-    document.getElementById('timer').textContent = formatTime(timerTime);
+    document.getElementById("timer").textContent = formatTime(timerTime);
   }
 
   // Alarm functionality
   const alarms = new Set();
 
-  document.getElementById('setAlarm').addEventListener('click', () => {
-    let alarmEl = document.getElementById('alarmTime') as HTMLInputElement
+  document.getElementById("setAlarm").addEventListener("click", () => {
+    let alarmEl = document.getElementById("alarmTime") as HTMLInputElement;
     const alarmTime = alarmEl.value;
     if (alarmTime) {
       alarms.add(alarmTime);
@@ -173,11 +168,11 @@
 
   function checkAlarms() {
     const now = new Date();
-    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
 
-    alarms.forEach(alarm => {
+    alarms.forEach((alarm) => {
       if (alarm === currentTime) {
-        alert('Alarm!');
+        alert("Alarm!");
         alarms.delete(alarm);
         updateAlarmDisplay();
       }
@@ -187,14 +182,14 @@
   setInterval(checkAlarms, 1);
 
   function updateAlarmDisplay() {
-    const alarmsContainer = document.getElementById('activeAlarms');
-    alarmsContainer.innerHTML = '';
-    alarms.forEach(alarm => {
-      const alarmElement = document.createElement('div');
-      alarmElement.className = 'alarm-item';
+    const alarmsContainer = document.getElementById("activeAlarms");
+    alarmsContainer.innerHTML = "";
+    alarms.forEach((alarm) => {
+      const alarmElement = document.createElement("div");
+      alarmElement.className = "alarm-item";
       alarmElement.textContent = alarm;
-      const deleteButton = document.createElement('button');
-      deleteButton.textContent = 'Delete';
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
       deleteButton.onclick = () => {
         alarms.delete(alarm);
         updateAlarmDisplay();
@@ -210,7 +205,7 @@
     const m = Math.floor((ms % 3600000) / 60000);
     const s = Math.floor((ms % 60000) / 100);
     const msec = ms % 100;
-    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}:${String(msec).padStart(2, '0')}`;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}:${String(msec).padStart(2, "0")}`;
   }
 </script>
 
@@ -228,7 +223,7 @@
     background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .time-display {
