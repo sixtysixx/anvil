@@ -30,7 +30,6 @@
     toggleLoading(true);
     try {
       const { data, error } = await supabase.from("events").select("*");
-
       if (error) throw error;
 
       return data.map((event) => ({
@@ -190,3 +189,4 @@
     display: none;
   }
 </style>
+box-shadow: 0 2px 4px rgba(0,
