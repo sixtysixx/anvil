@@ -1,0 +1,22 @@
+import cv2
+
+orgimage = cv2.imread('tree.jpg')
+width = 500
+height = int(orgimage.shape[0] * (width / orgimage.shape[1]))
+image = cv2.resize(orgimage, (width, height))
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+blurred_image = cv2.GaussianBlur(gray_image, (5, 5), 0)
+median_filtered_image = cv2.medianBlur(gray_image, 5)
+edges = cv2.Canny(gray_image, 100, 200)
+cv2.imshow('Original Image', image)
+cv2.imshow('Resized Image', image)
+cv2.imshow('Grayscale Image', gray_image) 
+cv2.imshow('Gaussian Blur', blurred_image) 
+cv2.imshow('Median Filter', median_filtered_image) 
+cv2.imshow('Edges', edges)
+cv2.imwrite('gray_image.jpg', gray_image) 
+cv2.imwrite('blurred_image.jpg', blurred_image) 
+cv2.imwrite('median_filtered_image.jpg', median_filtered_image) 
+cv2.imwrite('edges.jpg', edges)
+cv2.waitKey(0) 
+cv2.destroyAllWindows()
