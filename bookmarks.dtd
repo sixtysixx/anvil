@@ -1,0 +1,6 @@
+<!DOCTYPE bookmarks [
+        <!ELEMENT bookmarks (bookmark)*>
+        <!ELEMENT bookmark (title,url)>
+        <!ELEMENT title (#PCDATA)>
+        <!ELEMENT url (#PCDATA)>
+]>
