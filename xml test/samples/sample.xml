@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<channel>
+  <item>
+    <title>Google.com</title>
+    <link>http://www.google.com//</link>
+    <description>A search engine.</description>
+  </item>
+  
+  <item>
+      <title>eDynamicLearning</title>
+      <link>https://edynamiclearning.com/</link>
+      <description>Career and Elective Courses</description>
+  </item>
+  <item>
+      <title>w3schools</title>
+      <link>https://www.w3schools.com/xml/default.asp</link>
+      <description>XML Tutorial</description>
+    </item>
+</channel>
