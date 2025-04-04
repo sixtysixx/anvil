@@ -1,0 +1,217 @@
+body {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif
+}
+
+h1 {
+    color: #0c0c0c
+}
+
+h2 {
+    color: black
+}
+
+p {
+    text-align: justify;
+}
+
+a {
+    text-align: auto;
+}
+
+img {
+    border: 5px solid #0c0c0c;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: auto;
+}
+
+th,
+td {
+    border: 1px solid #0c0c0c;
+    padding: 16px;
+    text-align: auto;
+}
+
+th {
+    background-color: blanchedalmond;
+    font-weight: bold;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+tbody tr:hover {
+    background-color: #e0e0e0;
+}
+
+td .icon {
+    font-size: 24px;
+    color: 4CAF50;
+    margin: auto;
+}
+
+td[title] {
+    position: relative;
+    cursor: pointer;
+}
+
+td[title]::after {
+    content: attr(title);
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    background-color: #333333;
+    color: #ffffff;
+    padding: 12px;
+    border-radius: 3px;
+    opacity: 0;
+    visibility: hidden;
+    white-space: nowrap;
+    transition: opacity .235s ease-in-out;
+    z-index: 10;
+}
+
+td[title]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+ul {
+    list-style-type: square;
+    padding-left: 16px;
+}
+
+ol {
+    list-style-type: decimal-leading-zero;
+    padding-left: 16px;
+}
+
+ul,
+ol {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 18px;
+    line-height: 1.60;
+    margin: auto;
+}
+
+ul.custom-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.custom-list li {
+    padding-left: 30px;
+    background: url('https://i.pinimg.com/736x/3a/c3/28/3ac328dc8a40a9258e705bcf5d227476.jpg') no-repeat left auto;
+    background-size: auto;
+}
+
+ul,
+ol {
+    padding-left: 16px;
+}
+
+ul ul,
+ol ol {
+    list-style-type: circle;
+    padding-left: 16px;
+    font-style: italic;
+    color: #555555
+}
+
+input[type="text"],
+text area {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    font-size: 16px;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #f3f4f6;
+    outline: none;
+    background-color: #f9f9f9;
+}
+
+button {
+    background-color: #0c0b09;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #333333;
+    transition: ease-in-out all .8s;
+}
+
+form {
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+input,
+textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #aaaaaa;
+    font-style: italic;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
+button.delete {
+    margin-left: 12px;
+    font-size: small;
+}
+
+* {
+    text-align: justify;
+}
+
+#ToC {
+    float: right;
+    position: sticky;
+    top: 16px;
+    right: 32px;
+    /* fix the thingy so it goes into right corner not left */
+}
+
+#cat {
+    position: sticky;
+    width: 10%;
+    height: auto;
+    top: 8px;
+}

@@ -1,0 +1,12 @@
+body {
+    margin: 0;
+    overflow: hidden;
+        /* skadoosh scrollbar */
+    background-color: #0c0c0c;
+}
+
+canvas {
+    display: block;
+        /* 
+     remove inline space*/
+}

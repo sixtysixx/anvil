@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<body>
+  <nav id="ToC">
+    <h2>Table of contents</h2>
+    <ul>
+      <li> <a href=" #favfruits">fruits</a></li>
+      <li> <a href="#favgames">games</a></li>
+      <li> <a href="#hobbies">hobbies</a></li>
+      <li> <a href="#classes">schedule</a></li>
+      <li> <a href="to-do.html">TO-DO</a></li>
+      <li> <a href="form.html">survey thing</a></li>
+    </ul>
+  </nav>
+  <link href="style.css" rel="stylesheet">
+
+  <title>Six</title>
+
+  <section id="to-do">
+    <h1>Todo List</h1>
+    <input id="task-Input" placeholder="Eat the microwave">
+    <button id="AddTaskButton">Add Task</button>
+    <ul id="task-List"></ul>
+  </section>
+
+  <script>
+    const taskInput = document.getElementById("task-Input");
+    const addTaskButton = document.getElementById("AddTaskButton");
+    const taskList = document.getElementById("task-List");
+
+    // Load saved tasks from local storage when the page loads
+    window.onload = loadTasks;
+
+    addTaskButton.addEventListener("click", function () {
+      const newTask = taskInput.value.trim();
+      if (newTask) {
+        addTask(newTask, false);
+        saveTasks();
+        taskInput.value = "";
+      }
+    });
+
+    function addTask(task, completed) {
+      const li = document.createElement("li");
+      li.textContent = task; // use 'task' instead of 'newTask'
+      if (completed) {
+        li.classList.add('completed');
+      }
+      li.addEventListener("click", function () {
+        this.classList.toggle("completed");
+        saveTasks(); // Make sure to save after toggling completion
+      });
+      addDeleteButton(li);
+      taskList.appendChild(li);
+      taskInput.value = "";
+    }
+
+    function addDeleteButton(item) {
+      const deleteButton = document.createElement("button");
+      deleteButton.classList.add("delete");
+      deleteButton.textContent = "Skadoosh";
+      deleteButton.addEventListener("click", function () {
+        item.remove();
+        saveTasks();
+      });
+      item.appendChild(deleteButton);
+    }
+
+    // Function to save tasks to local storage
+    function saveTasks() {
+      const tasks = [];
+      document.querySelectorAll('#task-List li').forEach(li => {
+        tasks.push({
+          text: li.childNodes[0].nodeValue.trim(),
+          completed: li.classList.contains('completed')
+        });
+      });
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    // Function to load tasks from local storage
+    function loadTasks() {
+      const savedTasks = JSON.parse(localStorage.getItem('tasks'));
+      if (savedTasks) {
+        savedTasks.forEach(task => {
+          addTask(task.text, task.completed);
+        });
+      }
+    }
+  </script>
+</body>
