@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<recipes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd">
+  <recipe>
+    <name>Java Chip Caffeinated Smoothie</name>
+    <description>4 hrs 10 mins</description>
+    <price>12$</price>
+    <kcal>264</kcal>
+    <ingredients> Coffee, Chocolate Chips, Coffee beans, Sugar, Whipped Cream, Half &amp; Half</ingredients>
+  </recipe>
+  <recipe>
+    <name>Peach &amp; Orange Cream Protein Smoothie</name>
+    <description>10 Mins</description>
+    <price>7$</price>
+    <kcal>241</kcal>
+    <ingredients>Peaches, Water (or Yogurt/Milk of Choice) Protein Powder, Sliced and Frozen Orange </ingredients>
+  </recipe>
+  <recipe>
+    <name>Dark Chocolate Peanut Butter Banana Protein Smoothie</name>
+    <description>5 Mins</description>
+    <price>8$</price>
+    <kcal>373</kcal>
+    <ingredients>Frozen Bananas, Dark Chocolate Cocoa Powder, Peanut Butter, Water (or Yogurt/Milk of Choice), Chocolate Protein Powder </ingredients>
+  </recipe>
+  <recipe>
+    <name>3-Ingredient Banana Oat Smoothie</name>
+    <description>5 mins</description>
+    <price>6$</price>
+    <kcal>552</kcal>
+    <ingredients>Rolled Oats, Banana, Milk</ingredients>
+  </recipe>
+  <recipe>
+    <name>Strawberry Banana Smoothie</name>
+    <description>5 mins</description>
+    <price>6$</price>
+    <kcal>N/a</kcal>
+    <ingredients>Frozen Strawberries, Banana, Ice, Milk</ingredients>
+  </recipe>
+</recipes>

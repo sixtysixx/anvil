@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<body>
+
+    <nav id="ToC">
+        <h2>Table of contents</h2>
+        <ul>
+            <li> <a href=" #favfruits">fruits</a></li>
+            <li> <a href="#favgames">games</a></li>
+            <li> <a href="#hobbies">hobbies</a></li>
+            <li> <a href="#classes">schedule</a></li>
+            <li> <a href="to-do.html">TO-DO</a></li>
+            <li> <a href="form.html">survey thing</a></li>
+        </ul>
+    </nav>
+
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <title>sixtysxx</title>
+    </head>
+    <h2>
+        <form action="#" method="POST" id="FormThatStealsYourData">
+            <fieldset>
+                <legend> Personal Info</legend>
+                <label for="name">Name:</label><br>
+                <input for="name" id="name" name="name" required><br><br>
+                <input type="date" name="DOB" required>
+            </fieldset>
+            <fieldset>
+                <legend> Contact Info</legend>
+                <label for="email">Email:</label><br>
+                <input for="email" id="email" name="email" placeholder="example@domain.com" required><br><br>
+
+                <label for="Phone">Phone:</label><br>
+                <input for="Phone" id="phone" name="phone" placeholder="720-720-7200" required><br><br>
+            </fieldset>
+            <fieldset>
+                <legend> Inquiring Message</legend>
+                <label for="MSG">Message:</label><br>
+                <input for="MSG" id="MSG" rows="5" cols="50" required><br><br>
+            </fieldset>
+            <label><input type="radio" name="gender" value="male"> Male </label><br>
+            <label><input type="radio" name="gender" value="female"> Female </label><br>
+            <label><input type="radio" name="gender" value="AH64"> AH-64 Attack Helicopter </label><br>
+            <label><input type="radio" name="gender" value="other">Other </label><br><br>
+            <select id="country" name="country">
+                <option value="usa">United States</option>
+                <option value="canada">Canada</option>
+                <option value="uk">United Kingdom</option>
+                <option value="overthere">Over there</option>
+            </select><br><br>
+            <label for="password">Set a Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="reset">Reset all</button>
+            <button id="submitionbutton" type="submit">Submit to epic database that def doesnt steal ur data</button>
+        </form>
+        <div id="errorMessages"></div>
+    </h2>
+</body>
+
+<script>
+    document.getElementById("FormThatStealsYourData").addEventListener("submit", function (event) {
+        event.preventDefault(); // stop form for validations
+
+        let errorMessages = [];
+        const name = document.getElementById("name").value;
+        const phone = document.getElementById("phone").value;
+        const email = document.getElementById("email").value;
+
+        if (name.length < 2) {
+            alert("NUH UH, Please enter a name with at least 2 characters");
+            return
+        }
+
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(phone)) {
+            alert("Phone number must be 10 digits")
+            return
+        }
+
+
+        const EmailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        if (!EmailRegex.test(email)) {
+            alert("Email Isnt formatted corrected")
+            return
+        }
+
+        const errorContainer = document.getElementById("errorMessages");
+        if (errorMessages.length > 0) {
+            errorContainer.innerHtml = errorMessages.join("<br>")
+        } else {
+            errorContainer.innerHtml = "";
+            alert("Your data is mine mwuahahahahhaha")
+        }
+    });
+</script>
