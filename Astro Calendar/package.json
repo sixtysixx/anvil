@@ -9,10 +9,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@fullcalendar/core": "^6.1.10",
-    "@fullcalendar/daygrid": "^6.1.10",
-    "@fullcalendar/interaction": "^6.1.10",
-    "@supabase/supabase-js": "^2.49.1",
+    "@fullcalendar/core": "^6.1.17",
+    "@fullcalendar/daygrid": "^6.1.17",
+    "@fullcalendar/interaction": "^6.1.17",
+    "@supabase/supabase-js": "^2.49.4",
     "astro": "^5.6.1",
     "cal": "link:"
   }
