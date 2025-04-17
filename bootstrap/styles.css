@@ -1,0 +1,14 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
+
+@media screen and (max-width: 600px) {
+    .box {
+        float: none;
+        width: 100%;
+        padding: 10% 10%;
+    }
+}
+
+.box {
+    border-radius: 8%;
+    height: 100%;
+}
