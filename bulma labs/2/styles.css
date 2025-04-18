@@ -1,0 +1,20 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
+
+.box {
+    border-radius: 8%;
+    height: 100%;
+}
+
+.notification {
+    opacity: 0%;
+}
+
+.question:focus .notification {
+    opacity: 100%
+}
+
+@media screen and (min-width: 600px) {
+    .question:not(:hover) .notification {
+        opacity: 0%
+    }
+}
