@@ -1,3 +1,10 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:6f55fd411bdb6b599235e5c41982678b776f2ee2ac652cd3807dc461e18ca674
-size 77
+torch
+transformers
+faster-whisper
+coqui-tts
+ctranslate2
+sounddevice
+soundfile
+numpy
+av
+accelerate
