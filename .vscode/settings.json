@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./SurvAIval/coqui-ai-TTS"
+    ]
+}

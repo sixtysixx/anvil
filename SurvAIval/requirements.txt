@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 sounddevice
 openai-whisper
 torch
@@ -5,3 +6,15 @@ transformers
 pyttsx3
 numpy
 typing-extensions
+=======
+torch
+transformers
+faster-whisper
+coqui-tts
+ctranslate2
+sounddevice
+soundfile
+numpy
+av
+accelerate
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718

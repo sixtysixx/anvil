@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import subprocess
 import traceback
 import queue
@@ -29,13 +30,51 @@ except ImportError as e:
 MODEL_NAME: str = "unsloth/DeepScaleR-1.5B-Preview"
 WHISPER_MODEL_SIZE: str = (
     "medium"  # Options: tiny, base, small, medium, large (trade-off speed/accuracy)
+=======
+import queue
+import numpy as np
+import logging
+from typing import Optional, Tuple
+import threading
+import time
+import os
+import soundfile as sf
+import av  # used by faster-whisper
+import traceback
+
+try:
+    import sounddevice as sd
+    from faster_whisper import WhisperModel
+    import torch
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+    from TTS.api import TTS
+except ImportError as e:
+    print(f"Error importing required library: {e}")
+    print(
+        "Please ensure sounddevice, faster-whisper, torch, transformers, TTS (coqui-tts), and soundfile are installed."
+    )
+    print(
+        "You might also need FFmpeg installed (or ensure the 'av' library provides it) and espeak-ng (for some TTS models)."  # Added espeak-ng note here
+    )
+    exit(1)
+
+# --- Configuration ---
+MODEL_NAME: str = "unsloth/Qwen2.5-3B-Instruct"
+WHISPER_MODEL_SIZE: str = (
+    "small"  # Options: tiny, base, small, medium, large (trade-off speed/accuracy)
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 )
 WHISPER_LANGUAGE: str = (
     "en"  # Set to None for auto-detection, or specify a language code (e.g., 'fr', 'es')
 )
 SAMPLE_RATE: int = 16000
+<<<<<<< HEAD
 RECORD_SECONDS: int = 30  # Maximum recording duration
 MAX_NEW_TOKENS: int = 512  # Reduced token limit for concise answers
+=======
+RECORD_SECONDS: int = 60  # Maximum recording duration
+MAX_NEW_TOKENS: int = 1024  # Reduced token limit for concise answers
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 DEVICE_MAP: str = (
     "cuda" if torch.cuda.is_available() else "cpu"
 )  # Simplified device check
@@ -53,24 +92,34 @@ SYSTEM_PROMPT: str = (
 # "tts_models/en/ljspeech/tacotron2-DDC" (Female, US English, good quality)
 # "tts_models/en/vctk/vits" (Multi-speaker, requires speaker selection)
 # "tts_models/en/ek1/tacotron2" (Male, US English)
+<<<<<<< HEAD
 COQUI_TTS_MODEL_NAME: str = "tts_models/en/ljspeech/tacotron2-DDC"
 # Optional: Specify a speaker if the model is multi-speaker
 COQUI_TTS_SPEAKER: Optional[str] = None  # e.g., "p225" for vctk/vits
 # Optional: Specify a language if the model is multi-lingual
+=======
+COQUI_TTS_MODEL_NAME: str = "tts_models/en/vctk/vits"
+COQUI_TTS_SPEAKER: Optional[str] = "p225"  # e.g., "p225" for vctk/vits
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 COQUI_TTS_LANGUAGE: Optional[str] = "en" if "multi" in COQUI_TTS_MODEL_NAME else None
 
 TTS_OUTPUT_FILENAME: str = "tts_output.wav"  # Temporary file for TTS audio
 
+<<<<<<< HEAD
 # Removed pyttsx3 specific config (TTS_VOICE, TTS_RATE)
 
 MAX_HISTORY_LENGTH: int = 5  # Number of recent turns to keep in memory
 # --- End Configuration ---
 
 # --- Logging Setup ---
+=======
+MAX_HISTORY_LENGTH: int = 5
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+<<<<<<< HEAD
 # --- Initialization ---
 print("Initializing components...")
 
@@ -112,10 +161,35 @@ def load_whisper_model(model_size: str) -> Optional[whisper.Whisper]:
         return model
     except Exception as e:
         logging.error(f"Error loading Whisper model: {e}")
+=======
+
+def load_whisper_model(
+    model_size: str,
+) -> Optional[WhisperModel]:  # Note: Return type changes
+    """Loads the specified Faster Whisper model."""
+    try:
+        logging.info(f"Loading Faster Whisper model ({model_size})...")
+        # Choose compute type based on device (float16 for CUDA, int8 or float32 for CPU)
+        compute_type = (
+            "float16" if DEVICE_MAP == "cuda" else "int8"
+        )  # int8 is often faster on CPU
+        # Load model to the determined device
+        model = WhisperModel(model_size, device=DEVICE_MAP, compute_type=compute_type)
+        logging.info(
+            f"Faster Whisper model loaded successfully to {DEVICE_MAP} with compute_type {compute_type}."
+        )
+        return model
+    except Exception as e:
+        logging.error(f"Error loading Faster Whisper model: {e}")
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
         logging.error(traceback.format_exc())
         return None
 
 
+<<<<<<< HEAD
+=======
+# --- (Keep load_language_model as is) ---
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 def load_language_model(
     model_name: str,
 ) -> Tuple[
@@ -166,14 +240,20 @@ def load_language_model(
             "trust_remote_code": True,
         }
 
+<<<<<<< HEAD
         # *** MODIFICATION START ***
+=======
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
         # Only pass device_map and low_cpu_mem_usage if targeting CUDA
         if DEVICE_MAP == "cuda":
             model_kwargs["device_map"] = DEVICE_MAP
             # low_cpu_mem_usage is primarily beneficial when using device_map with CUDA
             model_kwargs["low_cpu_mem_usage"] = True
         # If DEVICE_MAP is 'cpu', we don't pass device_map, letting transformers default to CPU.
+<<<<<<< HEAD
         # *** MODIFICATION END ***
+=======
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 
         model = AutoModelForCausalLM.from_pretrained(
             model_name, **model_kwargs  # Pass the arguments dictionary
@@ -190,8 +270,12 @@ def load_language_model(
             )
         return None, None
 
+<<<<<<< HEAD
 
 # Initialize Coqui TTS Engine
+=======
+# --- (Keep init_coqui_tts as is) ---
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 def init_coqui_tts() -> Optional[TTS]:
     """Initializes the Coqui TTS engine."""
     try:
@@ -238,7 +322,11 @@ def init_coqui_tts() -> Optional[TTS]:
 
 stop_recording = threading.Event()
 
+<<<<<<< HEAD
 
+=======
+# --- (Keep listen_for_enter as is) ---
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 def listen_for_enter():
     """Listens for the Enter key press to stop recording."""
     input()  # Wait for Enter key press
@@ -247,11 +335,20 @@ def listen_for_enter():
         stop_recording.set()
 
 
+<<<<<<< HEAD
 def recognize_speech(
     audio_model: whisper.Whisper,
     duration: int,
     rate: int,
     language: Optional[str],  # Allow None
+=======
+# --- (Keep recognize_speech as is) ---
+def recognize_speech(
+    audio_model: WhisperModel,
+    duration: int,
+    rate: int,
+    language: Optional[str],
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 ) -> Optional[str]:
     """Records audio using InputStream and transcribes it using Whisper. Stops early if Enter is pressed."""
     global stop_recording
@@ -304,6 +401,7 @@ def recognize_speech(
 
         max_amplitude = np.max(np.abs(audio_data_np))
         logging.debug(f"Max audio amplitude (int16): {max_amplitude}")
+<<<<<<< HEAD
         if max_amplitude < 500:
             logging.warning("Warning - Recorded audio seems very quiet.")
 
@@ -326,6 +424,45 @@ def recognize_speech(
         text = result["text"].strip()
         if not text:
             logging.warning("Whisper transcribed empty text.")
+=======
+        if (
+            max_amplitude < 500
+        ):  # Threshold might need tuning depending on mic sensitivity
+            logging.warning("Warning - Recorded audio seems very quiet.")
+
+        # Normalize audio for Whisper (remains the same)
+        audio_float32 = audio_data_np.astype(np.float32) / 32768.0
+
+        logging.info("Transcribing audio with Faster Whisper...")
+        # Determine Whisper options
+        whisper_options = {
+            "language": language if language and language.lower() != "none" else None,
+            # Add other faster-whisper specific options if needed (e.g., beam_size)
+            # "vad_filter": True, # faster-whisper has built-in VAD filtering
+        }
+        logging.debug(f"Faster Whisper options: {whisper_options}")
+
+        # Transcribe using faster-whisper
+        # The transcribe method returns an iterator of segments and transcription info
+        segments, info = audio_model.transcribe(
+            audio_float32.flatten(), **whisper_options
+        )
+
+        # Concatenate text from all segments
+        full_text = "".join(segment.text for segment in segments)
+        text = full_text.strip()
+
+        # Log detected language if needed
+        if info:
+            logging.debug(
+                f"Detected language: {info.language} with probability {info.language_probability}"
+            )
+
+        logging.debug(f"Raw Faster Whisper Text: {text}")
+
+        if not text:
+            logging.warning("Faster Whisper transcribed empty text.")
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
             return None
 
         print(f"Recognized: '{text}'")
@@ -344,9 +481,17 @@ def recognize_speech(
             stop_recording.set()
         # Wait for the input thread to potentially finish
         if enter_thread.is_alive():
+<<<<<<< HEAD
             enter_thread.join(timeout=0.5)  # Give it a moment to exit cleanly
 
 
+=======
+            # Give it a moment to exit cleanly after input() potentially blocks
+            enter_thread.join(timeout=0.5)
+
+
+# --- (Keep generate_response as is) ---
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 def generate_response(
     prompt: str,
     llm_model: AutoModelForCausalLM,
@@ -362,9 +507,18 @@ def generate_response(
         return None
 
     try:
+<<<<<<< HEAD
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         messages.extend(history)
         messages.append({"role": "user", "content": prompt.strip()})
+=======
+        # Construct messages including system prompt and history
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        messages.extend(history)  # Add user/assistant turns
+        messages.append(
+            {"role": "user", "content": prompt.strip()}
+        )  # Add current user prompt
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 
         # Ensure pad_token_id is set correctly before generation
         current_pad_token_id = tokenizer.pad_token_id
@@ -395,6 +549,10 @@ def generate_response(
                 eos_token_id=tokenizer.eos_token_id,  # Use the tokenizer's EOS token ID
             )
 
+<<<<<<< HEAD
+=======
+        # Decode only the newly generated tokens
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
         response_tokens = outputs[0][inputs.shape[-1] :]
         response_text = tokenizer.decode(
             response_tokens, skip_special_tokens=True
@@ -416,7 +574,11 @@ def generate_response(
         logging.error(traceback.format_exc())
         return None
 
+<<<<<<< HEAD
 
+=======
+# --- (Keep speak as is) ---
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 def speak(text: str, tts_engine: TTS):
     """Uses the Coqui TTS engine to speak the given text and plays it."""
     if not tts_engine:
@@ -473,6 +635,7 @@ def speak(text: str, tts_engine: TTS):
 
 # --- Main Execution ---
 if __name__ == "__main__":
+<<<<<<< HEAD
     if not check_ffmpeg():
         exit(1)
 
@@ -491,6 +654,16 @@ if __name__ == "__main__":
             logging.error("Language model or tokenizer failed to load.")
         if not tts_synthesizer:
             logging.error("Coqui TTS engine failed to load.")
+=======
+
+    whisper_model = load_whisper_model(WHISPER_MODEL_SIZE)
+    llm_model, tokenizer = load_language_model(MODEL_NAME)
+    tts_synthesizer = init_coqui_tts()
+
+    if not whisper_model or not llm_model or not tokenizer or not tts_synthesizer:
+        print("\nInitialization of one or more components failed. Exiting.")
+        # Consider adding more specific logging here about which component failed if needed
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
         exit(1)
 
     print("\nInitialization complete. Starting interaction loop (Ctrl+C to exit).")
@@ -508,6 +681,7 @@ if __name__ == "__main__":
             )
 
             if user_command:
+<<<<<<< HEAD
                 conversation_history.append({"role": "user", "content": user_command})
 
                 # 2. Generate Response
@@ -530,10 +704,54 @@ if __name__ == "__main__":
 
                     # 3. Speak Response using Coqui TTS
                     speak(ai_response, tts_synthesizer)  # Pass the coqui engine
+=======
+                # Append user message before generation
+                current_user_turn = {"role": "user", "content": user_command}
+
+                # Prepare history for the LLM (don't modify the main history list yet)
+                history_for_llm = conversation_history + [current_user_turn]
+
+                # Trim history *before* sending to LLM if it exceeds the limit
+                # Keep the last N turns (user + assistant pairs)
+                if len(history_for_llm) > MAX_HISTORY_LENGTH * 2:
+                    keep_items = MAX_HISTORY_LENGTH * 2
+                    history_for_llm = history_for_llm[-keep_items:]
+                    logging.debug(
+                        f"History for LLM trimmed to last {MAX_HISTORY_LENGTH} turns."
+                    )
+
+                # 2. Generate Response
+                ai_response = generate_response(
+                    user_command,
+                    llm_model,
+                    tokenizer,
+                    history_for_llm,  # Pass the potentially trimmed history
+                )
+
+                if ai_response:
+                    # Now add the user turn and the successful assistant response to the main history
+                    conversation_history.append(current_user_turn)
+                    conversation_history.append(
+                        {"role": "assistant", "content": ai_response}
+                    )
+
+                    # Trim the main conversation_history list permanently if needed
+                    # (This ensures the list doesn't grow indefinitely, separate from LLM input trimming)
+                    if (
+                        len(conversation_history) > MAX_HISTORY_LENGTH * 2 + 5
+                    ):  # Add buffer
+                        keep_items = MAX_HISTORY_LENGTH * 2
+                        conversation_history = conversation_history[-keep_items:]
+                        logging.debug(f"Main history list trimmed.")
+
+                    # 3. Speak Response using Coqui TTS
+                    speak(ai_response, tts_synthesizer)
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
                 else:
                     print(
                         "No response generated or an error occurred during generation."
                     )
+<<<<<<< HEAD
                     # Optionally speak an error message
                     # speak("Sorry, I couldn't generate a response.", tts_synthesizer)
 
@@ -541,6 +759,17 @@ if __name__ == "__main__":
                 print("No command recognized or an error occurred during recognition.")
                 # Optionally speak a message indicating no input was heard
                 # speak("I didn't hear anything.", tts_synthesizer)
+=======
+                    # Don't add user message to history if generation failed
+                    speak("Sorry, I couldn't generate a response.", tts_synthesizer)
+
+            else:
+                print("No command recognized or an error occurred during recognition.")
+                # Speak a message indicating no input was heard
+                speak(
+                    "I didn't hear anything clearly. Please try again.", tts_synthesizer
+                )  # Slightly more informative
+>>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
 
     except KeyboardInterrupt:
         print("\nCtrl+C detected. Exiting program.")
