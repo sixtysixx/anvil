@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Art Gallery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        .columns {
+            padding: 1%;
+        }
+
+        .column img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .column {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1> Angsty Gallery </h1>
+    <h1> 12 Art Street,</h1>
+    <h1> Los Angeles, CA</h1>
+    <h1> Coming this Fall.</h1>
+    <div id="site-navigation"></div>
+    <div class="columns">
+        <div class="column is-one-third"> <img src="./mountain-unsplash.jpg" alt="a smoky painting of mountains"></div>
+        <div class="column is-one-third"><img src="./borbs.jpg" alt="a pastel painting of birds"></div>
+        <div class="column is-one-third"><img src="./coast of forest.jpg" alt="a coast of forest"></div>
+        <div class="column is-one-third"> <img src="./foxes.jpg" alt="cute orange foxes cuddling painting"></div>
+        <div class="column is-one-third"> <img src="./painting1.jpg" alt="blue and white abstract painting"></div>
+        <div class="column is-one-third"> <img src="./tropical.jpg" alt="white palm trees scenic shot"></div>
+    </div>
+</body>
+
+</html>
