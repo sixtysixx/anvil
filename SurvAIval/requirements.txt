@@ -1,25 +1,8 @@
-<<<<<<< HEAD
 numpy
 faster-whisper
 sounddevice
-=======
-<<<<<<< HEAD
-sounddevice
-openai-whisper
-torch
-transformers
-pyttsx3
-numpy
-typing-extensions
-=======
->>>>>>> 19f8e5021b28a272b82ef82e922273d4c6eb9ed5
 torch
 transformers
 coqui-tts
 av
-<<<<<<< HEAD
 #you also need 'espeak-ng' installed via your system's package manager (e.g., apt, brew).
-=======
-accelerate
->>>>>>> e7c1b2840d3967661210ea1c2c97a391a6902718
->>>>>>> 19f8e5021b28a272b82ef82e922273d4c6eb9ed5
