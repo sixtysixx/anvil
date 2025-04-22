@@ -1,10 +1,8 @@
+numpy
+faster-whisper
+sounddevice
 torch
 transformers
-faster-whisper
 coqui-tts
-ctranslate2
-sounddevice
-soundfile
-numpy
 av
-accelerate
+#you also need 'espeak-ng' installed via your system's package manager (e.g., apt, brew).
