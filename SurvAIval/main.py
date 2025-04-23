@@ -1,3 +1,4 @@
+# /home/six/Documents/anvil/SurvAIval/main.py
 import queue  # Import queue for thread-safe data exchange between audio callback and processing.
 import numpy as np  # Import numpy for numerical operations, especially audio arrays.
 import logging  # Import logging for event logging.
@@ -39,7 +40,7 @@ except ImportError as e:  # Catch import errors.
 
 # --- Configuration ---
 MODEL_NAME: str = (
-    "microsoft/Phi-4-mini-instruct"  # Define the Hugging Face model name for the LLM.
+    "unsloth/Qwen2.5-0.5B"  # Define the Hugging Face model name for the LLM.
 )
 WHISPER_MODEL_SIZE: str = (
     "small"  # Define the size of the Faster Whisper model to use (e.g., tiny, base, small, medium, large).
@@ -53,10 +54,15 @@ SAMPLE_RATE: int = (
 RECORD_SECONDS: int = (
     60  # Define the maximum duration (seconds) for each audio recording session.
 )
+MIN_NEW_TOKENS: (
+    int
+) = (  # Define the minimum number of new tokens the LLM should generate.
+    16  # Set the minimum generation length.  # End min new tokens definition.
+)
 MAX_NEW_TOKENS: (
     int
 ) = (  # Define the maximum number of new tokens the LLM can generate in a single response.
-    2048  # Set a limit for response length.  # End max new tokens definition.
+    4096  # Set the upper limit for response length.  # End max new tokens definition.
 )
 DEVICE_MAP: str = (  # Determine the primary compute device ('cuda' or 'cpu').
     "cuda"  # Default to CUDA if available.
@@ -780,7 +786,7 @@ async def generate_response_async(  # Define async function for generating LLM r
         # --- End input preparation ---
 
         logging.info(  # Log the start of the LLM response generation process.
-            f"Generating LLM response with {input_length} input tokens (running in thread)..."  # Indicate that generation will run in a separate thread and log input size.
+            f"Generating LLM response with {input_length} input tokens (min: {MIN_NEW_TOKENS}, max: {MAX_NEW_TOKENS}) (running in thread)..."  # Indicate generation details and thread execution.
         )  # End logging info.
 
         # --- Run blocking model.generate in a separate thread ---
@@ -791,6 +797,7 @@ async def generate_response_async(  # Define async function for generating LLM r
             outputs = llm_model.generate(  # Execute the generation process.
                 input_ids=input_ids,  # Pass the input token IDs tensor.
                 attention_mask=attention_mask,  # Pass the attention mask tensor.
+                min_new_tokens=MIN_NEW_TOKENS,  # Set the minimum number of new tokens to generate.
                 max_new_tokens=MAX_NEW_TOKENS,  # Set the maximum number of new tokens to generate.
                 temperature=0.7,  # Define the sampling temperature for generation (controls randomness). Use configured value if available.
                 do_sample=True,  # Enable sampling (necessary for temperature > 0).
