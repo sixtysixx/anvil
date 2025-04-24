@@ -5,4 +5,4 @@ torch
 transformers
 coqui-tts
 av
-#you also need 'espeak-ng' installed via your system's package manager (e.g., apt, brew).
+#you also need 'espeak-ng' and 'libportaudio2' installed via your system's package manager (e.g., apt, brew), and a rust compiler (rustup).
