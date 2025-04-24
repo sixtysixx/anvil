@@ -1,4 +1,3 @@
-# /home/six/Documents/anvil/SurvAIval/main.py
 import queue  # Import queue for thread-safe data exchange between audio callback and processing.
 import numpy as np  # Import numpy for numerical operations, especially audio arrays.
 import logging  # Import logging for event logging.
