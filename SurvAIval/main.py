@@ -8,7 +8,7 @@ from typing import (  # Import typing for type hints.
     Dict,  # Dict type hint.
     Any,  # Any type hint.
 )  # End typing imports.
-
+import librosa # Import librosa for resampling
 import threading  # Import threading (though asyncio.to_thread is primarily used).
 import traceback  # Import traceback for formatting exception information.
 import asyncio  # Import asyncio for asynchronous operations
@@ -61,7 +61,7 @@ WHISPER_LANGUAGE: Optional[str] = (  # Target language for Whisper ('en', or Non
     "en"
 )
 SAMPLE_RATE: int = (
-    16000  # Audio sample rate (Hz). Whisper prefers 16kHz.
+    48000  # Audio sample rate (Hz). Try 48kHz as input device might support it.
 )
 RECORD_SECONDS: int = (
     60  # Max recording duration (seconds).
@@ -97,7 +97,7 @@ TTS_TRANSLATION_TABLE = str.maketrans('', '', CHARS_TO_REMOVE_FOR_TTS)
 
 # --- Coqui TTS Configuration ---
 COQUI_TTS_MODEL_NAME: str = (
-    "tts_models/en/vctk/vits"  # Default Coqui TTS model. Check for lighter alternatives if needed.
+    "tts_models/en/ljspeech/glow-tts"  # Lighter Glow-TTS model for potentially faster inference.
 )
 COQUI_TTS_SPEAKER: Optional[str] = (
     "p225"  # Speaker ID for multi-speaker models (e.g., VCTK).
@@ -361,6 +361,7 @@ async def recognize_speech_async(
         }
         logging.debug(f"Passing options to Faster Whisper transcribe: {whisper_options}")
 
+
         # Run blocking Whisper transcription in a separate thread
         segments, info = await asyncio.to_thread(
             audio_model.transcribe,
@@ -516,13 +517,27 @@ async def generate_response_async(
 
 # --- Helper function for TTS playback ---
 def _play_audio_blocking(audio_data: np.ndarray, sample_rate: int):
-    """Plays audio using sounddevice.play() and waits synchronously."""
+    """Plays audio using sounddevice.play() and waits synchronously. Resamples if needed."""
     try:
-        logging.debug(f"Starting playback of {len(audio_data)} samples at {sample_rate} Hz.")
-        sd.play(audio_data, sample_rate)
+        target_sr = 48000 # Choose a widely supported target sample rate (e.g., 44100 or 48000)
+        playback_data = audio_data
+
+        # Resample if the original TTS rate doesn't match the target playback rate
+        if sample_rate != target_sr:
+            logging.info(f"Resampling audio for playback from {sample_rate} Hz to {target_sr} Hz...")
+            # Ensure audio_data is 1D float for librosa resampling
+            playback_data = playback_data.flatten().astype(np.float32)
+            playback_data = librosa.resample(playback_data, orig_sr=sample_rate, target_sr=target_sr)
+            logging.info("Resampling complete.")
+            current_sample_rate = target_sr
+        else:
+            current_sample_rate = sample_rate
+
+        logging.debug(f"Starting playback of {len(playback_data)} samples at {current_sample_rate} Hz.")
+        sd.play(playback_data, current_sample_rate)
         sd.wait() # Block until playback is finished
         logging.debug("Playback finished.")
-    except Exception as e:
+    except (sd.PortAudioError, Exception) as e:
         logging.error(f"Error during audio playback (_play_audio_blocking): {e}\n{traceback.format_exc()}")
 
 async def speak_async(text: str, tts_engine: TTS):
