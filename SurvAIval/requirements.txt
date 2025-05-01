@@ -1,8 +1,19 @@
+# Core dependencies
 numpy
-faster-whisper
 sounddevice
+# faster-whisper requires torch
+faster-whisper
 torch
+# transformers requires torch
 transformers
-coqui-tts
+# TTS requires torch and potentially av
+coqtui-TTS
 av
-#you also need 'espeak-ng' and 'libportaudio2' installed via your system's package manager (e.g., apt, brew), and a rust compiler (rustup).
+
+# Notes:
+# - Ensure FFmpeg is installed system-wide (see README.md).
+# - Some TTS models might require 'espeak-ng' installed system-wide (see README.md).
+# - For specific hardware acceleration (like CUDA), you might need different torch versions.
+#   Install the correct PyTorch version for your system from: https://pytorch.org/get-started/locally/
+#   Example for CPU-only: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+# - Pinning versions (e.g., numpy==1.26.4) is recommended for reproducible environments.

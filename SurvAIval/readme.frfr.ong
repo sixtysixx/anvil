@@ -1,9 +1,76 @@
-Before running this script, you need to have the following software installed:
+# SurvAIval - Voice Assistant
 
-1.  **Python 3.10 to 3.12:** You can download it from [https://www.python.org/downloads/](https://www.python.org/downloads/).
-2.  **pip:** Python package installer, usually included with Python.
-3.  **FFmpeg:** Required by the Whisper model for audio processing.
+This script runs a voice-controlled AI assistant focused on providing general knowledge with a specialization in survival skills. It uses speech-to-text (Whisper), a language model (LLM), and text-to-speech (TTS) to interact with the user.
 
-    * **Debian/Ubuntu:** `sudo apt update && sudo apt install ffmpeg`
-    * **MacOS (Homebrew):** `brew install ffmpeg`
-    * **Windows:** Download from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html) and add it to your system's PATH environment variable.
+## Features
+
+*   **Voice Interaction:** Speak commands and receive spoken responses.
+*   **Survival Expertise:** Specialized knowledge base for first aid, resource finding, shelter, navigation, etc.
+*   **General Knowledge:** Can discuss a wide range of topics.
+*   **Configurable:** Adjust models, recording length, history, etc.
+*   **Raspberry Pi 5 Optimized (CPU):** Designed to run on Raspberry Pi 5 using CPU inference.
+
+## Requirements
+
+1.  **Python:** Version 3.10 to 3.12 recommended. Download from [https://www.python.org/downloads/](https://www.python.org/downloads/).
+2.  **pip:** Python package installer (usually included with Python).
+3.  **FFmpeg:** Required by Whisper and potentially TTS for audio processing.
+    *   **Debian/Ubuntu:** `sudo apt update && sudo apt install ffmpeg`
+    *   **MacOS (Homebrew):** `brew install ffmpeg`
+    *   **Windows:** Download from https://ffmpeg.org/download.html and add `ffmpeg.exe` to your system's PATH.
+4.  **espeak-ng (Optional but Recommended for some TTS models):** Some Coqui TTS models might require `espeak-ng` for phonemization.
+    *   **Debian/Ubuntu:** `sudo apt update && sudo apt install espeak-ng`
+    *   **MacOS (Homebrew):** `brew install espeak-ng`
+    *   **Windows:** Download pre-compiled binaries or build from source (https://github.com/espeak-ng/espeak-ng).
+
+## Installation
+
+1.  **Clone the repository (if applicable) or download the `main.py` file.**
+2.  **Navigate to the script's directory in your terminal.**
+3.  **Create and activate a virtual environment (Recommended):**
+    ```bash
+    python -m venv venv
+    # On Windows:
+    .\venv\Scripts\activate
+    # On macOS/Linux:
+    source venv/bin/activate
+    ```
+4.  **Install the required Python packages:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## Configuration
+
+You can adjust the behavior of the assistant by modifying the configuration variables near the top of `main.py`:
+
+*   `LLM_MODEL_NAME`: Hugging Face model for the language model.
+*   `WHISPER_MODEL_SIZE`: Size of the Whisper model (`tiny`, `base`, `small`, `medium`, `large`). Smaller models are faster but less accurate.
+*   `WHISPER_LANGUAGE`: Target language for transcription (e.g., "en") or `None` for auto-detect.
+*   `SAMPLE_RATE`: Audio sample rate (Whisper prefers 16000).
+*   `RECORD_SECONDS`: Maximum duration for voice input recording.
+*   `MIN_NEW_TOKENS`/`MAX_NEW_TOKENS`: Control the length of the LLM's generated response.
+*   `SYSTEM_PROMPT`: Defines the AI's persona and expertise.
+*   `CHARS_TO_REMOVE_FOR_TTS`: Characters filtered out before text-to-speech.
+*   `COQUI_TTS_MODEL_NAME`: Coqui TTS model to use for speech synthesis.
+*   `COQUI_TTS_SPEAKER`/`COQUI_TTS_SPEAKER_WAV`/`COQUI_TTS_LANGUAGE`: TTS voice/language settings.
+*   `MAX_HISTORY_LENGTH`: Number of past conversation turns to keep in memory.
+*   `LOG_LEVEL`: Set logging detail (e.g., `logging.INFO`, `logging.DEBUG`).
+
+**Raspberry Pi 5 Performance Notes:**
+
+*   The script is configured for CPU inference (`DEVICE_MAP = "cpu"`).
+*   Ensure you are using a **64-bit Raspberry Pi OS** for optimal performance.
+*   Consider using smaller `WHISPER_MODEL_SIZE` ('tiny', 'base') or LLMs (quantized versions like GGUF/ONNX) if performance is slow. This may require code changes.
+*   Use adequate cooling for the Pi 5, as sustained AI model inference can generate significant heat and lead to thermal throttling.
+
+## Running the Script
+
+1.  **Make sure your microphone and speakers are configured correctly in your operating system.**
+2.  **Activate your virtual environment (if you created one).**
+3.  **Run the script from the terminal:**
+    ```bash
+    python main.py
+    ```
+4.  **Follow the prompts:** The script will indicate when it's listening. Speak your command clearly. Press `Enter` to stop recording early.
+5.  **Press `Ctrl+C` in the terminal to stop the script.**
